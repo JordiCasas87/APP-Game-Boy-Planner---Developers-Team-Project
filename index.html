@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>Planner Boy</title>
-  <link rel="apple-touch-icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,700;1,900&display=swap" rel="stylesheet">
 
@@ -25,30 +25,23 @@
 
   body {
     margin: 0;
-    
-    /* --- FONDO DE POKÉBALLS --- */
-    /* Asegúrate de guardar tu imagen como 'fondo.jpg' */
+    /* Busca fondo.jpg */
     background: url('fondo.jpg') no-repeat center center fixed; 
     background-size: cover;
-    background-color: #222; /* Color de respaldo si no carga la imagen */
-
+    background-color: #222; 
     height: 100vh;
     width: 100vw;
     display: flex;
     justify-content: center;
-    
-    /* --- ALINEACIÓN --- */
-    /* Padding superior dinámico para evitar la barra de URL o el Notch */
+    align-items: center;
     padding-top: max(20px, env(safe-area-inset-top));
     padding-bottom: max(20px, env(safe-area-inset-bottom));
-    align-items: center; /* Centrado vertical */
-    
     font-family: 'Roboto', sans-serif;
     overflow: hidden; 
     touch-action: none;
   }
 
-  /* --- CARCASA REALISTA --- */
+  /* --- CONSOLA --- */
   .console {
     width: 360px;
     height: 610px;
@@ -57,7 +50,7 @@
     box-shadow: 
       inset 3px 3px 5px rgba(255,255,255,0.6),
       inset -3px -3px 5px rgba(0,0,0,0.1),
-      5px 10px 20px rgba(0,0,0,0.5); /* Sombra realista contra el fondo */
+      5px 10px 25px rgba(0,0,0,0.6);
     position: relative;
     padding: 30px 40px;
     display: flex;
@@ -66,52 +59,35 @@
     transform-origin: center center;
     transition: transform 0.1s;
   }
-
-  /* Ranuras superiores */
   .console::before {
     content: ""; position: absolute; top: 0; left: 20px; right: 20px; height: 25px;
     background: repeating-linear-gradient(to bottom, transparent 0, transparent 4px, rgba(0,0,0,0.05) 4px, rgba(0,0,0,0.05) 6px);
     border-bottom: 2px solid rgba(0,0,0,0.05);
   }
 
-  /* --- PANTALLA (LENS) --- */
+  /* --- LENS --- */
   .lens-wrapper {
     background: var(--gb-lens);
     border-radius: 10px 10px 45px 10px;
     padding: 12px 35px 8px 35px;
     box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1), 2px 3px 5px rgba(0,0,0,0.25);
-    margin-top: 15px;
-    position: relative;
+    margin-top: 15px; position: relative;
   }
-
-  .lens-lines {
-    position: absolute; top: 12px; left: 25px; right: 40px; height: 2px; display: flex; gap: 4px; pointer-events: none;
-  }
+  .lens-lines { position: absolute; top: 12px; left: 25px; right: 40px; height: 2px; display: flex; gap: 4px; pointer-events: none; }
   .line-blue { flex: 1; background: var(--gb-blue); }
   .line-mag { width: 25px; background: var(--gb-magenta); }
-
   .lens-text {
     color: #fff; font-size: 9px; text-align: center; margin-bottom: 6px;
     font-style: italic; font-weight: 700; letter-spacing: 0.5px;
     text-shadow: 1px 1px 0 #000; pointer-events: none;
   }
-
-  /* LED */
-  .battery-led {
-    position: absolute; top: 40%; left: 10px;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-  }
-  .led-bulb {
-    width: 7px; height: 7px; background: #500; border-radius: 50%;
-    box-shadow: inset 1px 1px 2px #000; transition: background 0.3s;
-  }
+  .battery-led { position: absolute; top: 40%; left: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .led-bulb { width: 7px; height: 7px; background: #500; border-radius: 50%; box-shadow: inset 1px 1px 2px #000; transition: background 0.3s; }
   .led-bulb.on { background: #f00; box-shadow: 0 0 4px #f00; }
   .led-text { color: #ccc; font-size: 5px; font-weight: bold; font-family: sans-serif; }
 
-  /* LCD */
-  .screen-border {
-    background: #6a7060; padding: 5px; box-shadow: inset 2px 2px 6px rgba(0,0,0,0.6);
-  }
+  /* --- PANTALLA LCD --- */
+  .screen-border { background: #6a7060; padding: 5px; box-shadow: inset 2px 2px 6px rgba(0,0,0,0.6); }
   .screen {
     background: var(--gb-screen-bg);
     background-image: 
@@ -127,6 +103,25 @@
     background: rgba(139, 172, 15, 0.6); pointer-events: none; z-index: 1;
   }
 
+  /* --- ANIMACIONES POKEBALL --- */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  
+  .poke-spinner {
+    display: block; margin: 10px auto; /* Centrado con margen vertical */
+    width: 24px; height: 24px;
+    animation: spin 3s linear infinite;
+  }
+  .blink-text {
+    animation: blink 1s step-end infinite;
+  }
+
   /* --- BRANDING --- */
   .brand {
     margin: 15px 0 25px 10px; font-family: 'Roboto', sans-serif; font-weight: 900;
@@ -135,20 +130,13 @@
   }
   .brand span { font-size: 13px; font-weight: 700; color: var(--gb-magenta); }
 
-  /* --- CONTROLES --- */
+  /* --- CONTROLS --- */
   .controls-area { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; }
-  
   .dpad { position: relative; width: 90px; height: 90px; }
-  .dpad-v, .dpad-h {
-    position: absolute; background: var(--gb-dpad); border-radius: 4px;
-    box-shadow: 1px 1px 0 #bbb, 3px 3px 5px rgba(0,0,0,0.4);
-  }
+  .dpad-v, .dpad-h { position: absolute; background: var(--gb-dpad); border-radius: 4px; box-shadow: 1px 1px 0 #bbb, 3px 3px 5px rgba(0,0,0,0.4); }
   .dpad-v { left: 30px; top: 0; width: 30px; height: 90px; }
   .dpad-h { top: 30px; left: 0; width: 90px; height: 30px; }
-  .dpad::after {
-    content:""; position: absolute; top: 35px; left: 35px; width: 20px; height: 20px;
-    background: radial-gradient(circle, #1a1a1a 20%, #2a2a2a 70%); border-radius: 50%;
-  }
+  .dpad::after { content:""; position: absolute; top: 35px; left: 35px; width: 20px; height: 20px; background: radial-gradient(circle, #1a1a1a 20%, #2a2a2a 70%); border-radius: 50%; }
   .dpad button { position: absolute; opacity: 0; width: 45px; height: 45px; cursor: pointer; z-index: 10; }
   #up { left: 22px; top: -10px; height: 50px; }
   #down { left: 22px; bottom: -10px; height: 50px; }
@@ -156,10 +144,7 @@
   #right { right: -10px; top: 22px; width: 50px; }
 
   .btns-ab { width: 120px; height: 70px; position: relative; transform: rotate(-25deg); margin-bottom: 10px; }
-  .btn-round {
-    width: 38px; height: 38px; background: var(--gb-btn-ab); border-radius: 50%; border: none;
-    position: absolute; box-shadow: 2px 2px 5px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(0,0,0,0.3); cursor: pointer;
-  }
+  .btn-round { width: 38px; height: 38px; background: var(--gb-btn-ab); border-radius: 50%; border: none; position: absolute; box-shadow: 2px 2px 5px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(0,0,0,0.3); cursor: pointer; }
   .btn-round:active { transform: scale(0.95); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5); }
   .label-ab { position: absolute; color: var(--gb-blue); font-family: sans-serif; font-weight: bold; font-size: 14px; pointer-events: none; }
   #btnA { right: 0; bottom: 10px; } .l-a { right: 8px; bottom: -12px; }
@@ -167,14 +152,10 @@
 
   .menu-btns { display: flex; justify-content: center; gap: 15px; margin-top: 50px; }
   .pill-group { display: flex; flex-direction: column; align-items: center; transform: rotate(-25deg); }
-  .btn-pill {
-    width: 50px; height: 12px; background: var(--gb-btn-select); border: none; border-radius: 10px;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.2); cursor: pointer; margin-bottom: 5px; position: relative;
-  }
+  .btn-pill { width: 50px; height: 12px; background: var(--gb-btn-select); border: none; border-radius: 10px; box-shadow: 1px 1px 2px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.2); cursor: pointer; margin-bottom: 5px; position: relative; }
   .btn-pill::after { content:""; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px; }
   .btn-pill:active { background: #555; }
   .label-ss { font-family: sans-serif; font-size: 9px; font-weight: bold; color: var(--gb-blue); letter-spacing: 0.5px; }
-
   .speaker { position: absolute; bottom: 30px; right: 35px; transform: rotate(-25deg); display: flex; gap: 7px; opacity: 0.4; }
   .slot { width: 6px; height: 40px; background: #000; border-radius: 3px; box-shadow: inset 1px 1px 1px rgba(0,0,0,0.5); }
 
@@ -188,16 +169,9 @@
   .form { display: flex; flex-direction: column; gap: 6px; height: 140px; overflow-y: auto; scrollbar-width: none; }
   .field { display: flex; flex-direction: column; }
   label { font-size: 8px; margin-bottom: 2px; text-transform: uppercase; }
-  input, select, textarea {
-    font-family: 'Press Start 2P', monospace; font-size: 8px; background: transparent; border: none;
-    border-bottom: 2px solid var(--gb-screen-dark); outline: none; color: var(--gb-screen-dark);
-    width: 100%; border-radius: 0; padding: 4px 0;
-  }
+  input, select, textarea { font-family: 'Press Start 2P', monospace; font-size: 8px; background: transparent; border: none; border-bottom: 2px solid var(--gb-screen-dark); outline: none; color: var(--gb-screen-dark); width: 100%; border-radius: 0; padding: 4px 0; }
   textarea { border: 2px solid var(--gb-screen-dark); min-height: 50px; padding: 4px; resize: none; }
-  .hint-container {
-    margin-top: auto; background: var(--gb-screen-bg); padding-top: 4px;
-    border-top: 1px dashed var(--gb-screen-dark); font-size: 8px; text-align: center;
-  }
+  .hint-container { margin-top: auto; background: var(--gb-screen-bg); padding-top: 4px; border-top: 1px dashed var(--gb-screen-dark); font-size: 8px; text-align: center; }
   ::-webkit-scrollbar { width: 0px; background: transparent; }
 </style>
 </head>
@@ -236,33 +210,19 @@
 </div>
 
 <script>
-/** * === AUTO-SCALE SCRIPT === */
-function resizeConsole() {
+/** * AUTO-SCALE SCRIPT */
+function resizeConsole(){
   const consoleEl = document.querySelector('.console');
-  // Safe area para que no toque bordes
-  const marginW = 10;
-  const marginH = 20; 
-  
-  const availableWidth = window.innerWidth - marginW;
-  const availableHeight = window.innerHeight - marginH;
-  
-  const baseWidth = 360;
-  const baseHeight = 610;
-  
-  const scaleW = availableWidth / baseWidth;
-  const scaleH = availableHeight / baseHeight;
-  
-  const scale = Math.min(scaleW, scaleH);
-  
-  // Limitar que no crezca demasiado en pantallas gigantes
-  const finalScale = Math.min(scale, 1.2); 
-  
-  consoleEl.style.transform = `scale(${finalScale})`;
+  const marginW=10, marginH=20; 
+  const availableWidth=window.innerWidth-marginW, availableHeight=window.innerHeight-marginH;
+  const baseWidth=360, baseHeight=610;
+  const scale = Math.min(availableWidth/baseWidth, availableHeight/baseHeight);
+  consoleEl.style.transform = `scale(${Math.min(scale, 1.2)})`;
 }
 window.addEventListener('load', resizeConsole);
 window.addEventListener('resize', resizeConsole);
 
-/** * LOGIC */
+/** * APP LOGIC */
 const Storage={load(a,b){try{const c=localStorage.getItem(a);if(!c)return b;const d=JSON.parse(c);return d??b}catch(e){return b}},save(a,b){localStorage.setItem(a,JSON.stringify(b))}},Keys={events:"plannerboy.events",notes:"plannerboy.notes",tasks:"plannerboy.tasks"};let events=Storage.load(Keys.events,[]),notes=Storage.load(Keys.notes,[]),tasks=Storage.load(Keys.tasks,[]);function uid(){return window.crypto?.randomUUID?crypto.randomUUID():"id-"+Math.random().toString(16).slice(2)+"-"+Date.now()}
 function requireNonEmpty(a,b){if(!String(a??"").trim())throw new Error(b+" is required")}
 function validateEvent(a){requireNonEmpty(a.title,"Title"),requireNonEmpty(a.date,"Date")}
@@ -277,17 +237,39 @@ function formatTaskRow(a){return("YES"===a.done?"[x]":"[ ]")+" "+a.title+" ("+a.
 function formatNoteRow(a){return""+a.title}
 function listData(a){return"EVENTS"===a?{key:Keys.events,arr:events,format:formatEventRow}:"NOTES"===a?{key:Keys.notes,arr:notes,format:formatNoteRow}:{key:Keys.tasks,arr:tasks,format:formatTaskRow}}
 function persist(a){const{key:b,arr:c}=listData(a);Storage.save(b,c)}
-function renderCover(){const a=new Date;screen.innerHTML=`<div style="text-align:center; padding-top:20px;">${line("PLANNER BOY","title")}${line("v2.2 Pro Edition","tiny")}<div class="divider"></div>${line(a.toDateString(),"line")}<br>${line("PRESS START","line")}</div><div style="position:absolute; bottom:5px; left:0; width:100%; text-align:center;">${line("Developers Team","tiny")}</div>`}
+
+// *** RENDER COVER CON POKEBALL + TODO EL TEXTO ***
+function renderCover(){
+  const a=new Date;
+  // SVG de la Pokéball (dibujado con código)
+  const pokeSvg = `
+  <svg class="poke-spinner" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="var(--gb-screen-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <circle cx="12" cy="12" r="3" fill="var(--gb-screen-bg)" />
+      <circle cx="12" cy="12" r="1" fill="var(--gb-screen-dark)" stroke="none" />
+    </g>
+  </svg>`;
+
+  screen.innerHTML=`
+    <div style="text-align:center; padding-top:10px;">
+      ${line("PLANNER BOY","title")}
+      ${line("v2.3 Pro","tiny")}
+      <div class="divider"></div>
+      ${line(a.toDateString(),"line")}
+      <br>
+      ${pokeSvg} <br>
+      ${line("PRESS START","blink-text line")} </div>
+    <div style="position:absolute; bottom:5px; left:0; width:100%; text-align:center;">
+      ${line("Developers Team","tiny")}
+    </div>
+  `;
+}
+
 function renderMainMenu(){const a=state.index??0,b=MainMenu.map((b,c)=>{const d=c===a?"selected":"",e=c===a?">":"&nbsp;";return`<div class="line selectable ${d}" data-i="${c}">${e}${b}</div>`}).join("");screen.innerHTML=`${line("MAIN MENU","title")}<div style="margin-top:10px">${b}</div><div class="hint-container">SELECT: Quick Task</div>`,wireSelectableLines()}
 function renderList(a){const{arr:b,format:c}=listData(a),d=Math.min(state.index??0,Math.max(0,b.length-1));state.index=d;const e=(b.length?b:[{_empty:!0}]).map((a,b)=>{if(a._empty)return`<div class="line" style="text-align:center; margin-top:20px;">-- EMPTY --</div>`;const e=b===d?"selected":"",f=b===d?">":"&nbsp;";return`<div class="line selectable ${e}" data-i="${b}">${f}${escapeHtml(c(a))}</div>`}).join("");screen.innerHTML=`${line(a,"title")}<div style="height:125px; overflow-y:auto; scrollbar-width:none;">${e}</div><div class="hint-container">A:Open SEL:New B:Back</div>`,wireSelectableLines()}
-
-// *** DETALLE CON INSTRUCCIONES NUEVAS ***
-function renderDetail(a,b){let c="";
-  // Instrucción especial si es TAREA
-  const hintText = "TASKS"===a ? "Tip: Usa la cruceta ◄ / ► para marcar DONE" : "A:Edit SEL:Del B:Back";
-  
-  c="EVENTS"===a?`${line(escapeHtml(b.title),"title")}${line("DATE: "+escapeHtml(b.date||""),"line")}${line("TIME: "+escapeHtml(b.time||"-"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`:"NOTES"===a?`${line(escapeHtml(b.title),"title")}<div class="divider"></div>${line(escapeHtml(b.content||""),"tiny")}`:`${line(escapeHtml(b.title),"title")}${line("PRIO: "+escapeHtml(b.priority||"MEDIUM"),"line")}${line("DONE: "+escapeHtml(b.done||"NO"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`,screen.innerHTML=`<div style="height:140px; overflow-y:auto;">${c}</div><div class="hint-container">${hintText}</div>`}
-
+function renderDetail(a,b){let c="";const h="TASKS"===a?"Tip: Usa la cruceta ◄/► para marcar DONE":"A:Edit SEL:Del B:Back";c="EVENTS"===a?`${line(escapeHtml(b.title),"title")}${line("DATE: "+escapeHtml(b.date||""),"line")}${line("TIME: "+escapeHtml(b.time||"-"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`:"NOTES"===a?`${line(escapeHtml(b.title),"title")}<div class="divider"></div>${line(escapeHtml(b.content||""),"tiny")}`:`${line(escapeHtml(b.title),"title")}${line("PRIO: "+escapeHtml(b.priority||"MEDIUM"),"line")}${line("DONE: "+escapeHtml(b.done||"NO"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`,screen.innerHTML=`<div style="height:140px; overflow-y:auto;">${c}</div><div class="hint-container">${h}</div>`}
 function renderForm(a,b,c){const d="edit"===b,e="EVENTS"===a?d?"EDIT EVENT":"NEW EVENT":"NOTES"===a?d?"EDIT NOTE":"NEW NOTE":d?"EDIT TASK":"NEW TASK",f="EVENTS"===a,g="NOTES"===a,h="TASKS"===a,i=JSON.parse(JSON.stringify(c||{}));f&&(i.title=i.title??"",i.description=i.description??"",i.date=i.date??(new Date).toISOString().slice(0,10),i.time=i.time??""),g&&(i.title=i.title??"",i.content=i.content??""),h&&(i.title=i.title??"",i.description=i.description??"",i.priority=i.priority??"MEDIUM",i.done=i.done??"NO"),screen.innerHTML=`${line(e,"title")}<div class="form" id="form"><div class="field"><label>TITLE</label><input id="fTitle" value="${escapeAttr(i.title)}" autocomplete="off"/></div>${f?`<div style="display:flex; gap:5px;"><div class="field" style="flex:1"><label>DATE</label><input id="fDate" type="date" value="${escapeAttr(i.date)}" /></div><div class="field" style="flex:1"><label>TIME</label><input id="fTime" type="time" value="${escapeAttr(i.time)}" /></div></div><div class="field"><label>DESC</label><textarea id="fDesc">${escapeHtml(i.description)}</textarea></div>`:""}${g?`<div class="field"><label>CONTENT</label><textarea id="fContent" style="min-height:80px">${escapeHtml(i.content)}</textarea></div>`:""}${h?`<div style="display:flex; gap:5px;"><div class="field" style="flex:1"><label>PRIO</label><select id="fPriority">${["LOW","MEDIUM","HIGH"].map(a=>`<option value="${a}" ${i.priority===a?"selected":""}>${a}</option>`).join("")}</select></div><div class="field" style="flex:1"><label>DONE</label><select id="fDone">${["NO","YES"].map(a=>`<option value="${a}" ${i.done===a?"selected":""}>${a}</option>`).join("")}</select></div></div><div class="field"><label>DESC</label><textarea id="fDesc">${escapeHtml(i.description)}</textarea></div>`:""}</div><div class="hint-container">A:Save B:Cancel</div>`,setTimeout(()=>{document.getElementById("fTitle")?.focus()},100)}
 function renderAbout(){screen.innerHTML=`${line("ABOUT","title")}<br>${line("PLANNER BOY","line")}<div class="divider"></div>${line("DEVELOPERS TEAM:","tiny")}<br>${line("Pau","line")}${line("Jordi","line")}${line("Andres","line")}<div class="divider"></div><div class="hint-container">B: Back</div>`}
 function renderConfirmDelete(a,b){const c="TASKS"===a?formatTaskRow(b):"EVENTS"===a?formatEventRow(b):formatNoteRow(b);screen.innerHTML=`${line("DELETE ITEM?","title")}<br>${line(escapeHtml(c),"tiny")}<br>${line("CONFIRM?","line")}<div class="hint-container">A:Yes B:No</div>`}
