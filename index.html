@@ -9,7 +9,6 @@
 
 <style>
   :root {
-    /* Paleta de colores Game Boy Original (DMG-01) */
     --gb-case: #c0c0c0;
     --gb-lens: #53535d;
     --gb-screen-bg: #8bac0f;
@@ -25,18 +24,21 @@
 
   body {
     margin: 0;
-    background: #e0e0e0;
-    min-height: 100vh;
+    padding: 0; /* Sin relleno extra */
+    background: #111; /* Fondo oscuro para resaltar la pantalla */
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Roboto', sans-serif;
-    overflow: hidden; /* Evitar scroll elástico en iOS */
-    touch-action: none; /* Bloquear gestos del navegador */
+    overflow: hidden; /* IMPORTANTE: Sin scroll */
+    touch-action: none;
   }
 
   /* --- CARCASA --- */
   .console {
+    /* Tamaño base de diseño (luego el JS lo escala) */
     width: 360px;
     height: 610px;
     background: var(--gb-case);
@@ -44,16 +46,16 @@
     box-shadow: 
       inset 3px 3px 5px rgba(255,255,255,0.6),
       inset -3px -3px 5px rgba(0,0,0,0.1),
-      5px 15px 30px rgba(0,0,0,0.4);
+      0 0 50px rgba(0,0,0,0.5); /* Sombra externa más difusa */
     position: relative;
     padding: 30px 40px;
     display: flex;
     flex-direction: column;
     user-select: none;
-    transition: transform 0.2s;
+    /* El JS controlará el transform, pero definimos el origen */
+    transform-origin: center center;
   }
 
-  /* Decoración superior */
   .console::before {
     content: "";
     position: absolute;
@@ -96,7 +98,6 @@
     pointer-events: none;
   }
 
-  /* LED Batería */
   .battery-led {
     position: absolute;
     top: 40%; left: 10px;
@@ -124,13 +125,11 @@
 
   .screen {
     background: var(--gb-screen-bg);
-    /* Efecto pixel grid */
     background-image: 
       linear-gradient(var(--gb-screen-dark) 1px, transparent 1px),
       linear-gradient(90deg, var(--gb-screen-dark) 1px, transparent 1px);
     background-size: 2px 2px;
     background-blend-mode: overlay;
-    
     height: 200px;
     width: 100%;
     overflow: hidden;
@@ -143,12 +142,12 @@
   .screen > * { position: relative; z-index: 2; }
   .screen::after {
     content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
-    background: rgba(139, 172, 15, 0.6); /* Tinte verde unificador */
+    background: rgba(139, 172, 15, 0.6);
     pointer-events: none;
     z-index: 1;
   }
 
-  /* --- LOGO PERSONALIZADO --- */
+  /* --- MARCA --- */
   .brand {
     margin: 15px 0 25px 10px;
     font-family: 'Roboto', sans-serif;
@@ -162,7 +161,6 @@
     align-items: baseline;
     gap: 6px;
   }
-  /* Aquí cambiamos el texto grande */
   .brand span { font-size: 13px; font-weight: 700; color: var(--gb-magenta); }
 
   /* --- CONTROLES --- */
@@ -173,11 +171,7 @@
     padding: 0 10px;
   }
 
-  /* CRUCETA */
-  .dpad {
-    position: relative;
-    width: 90px; height: 90px;
-  }
+  .dpad { position: relative; width: 90px; height: 90px; }
   .dpad-v, .dpad-h {
     position: absolute;
     background: var(--gb-dpad);
@@ -191,16 +185,14 @@
     background: radial-gradient(circle, #1a1a1a 20%, #2a2a2a 70%);
     border-radius: 50%;
   }
-  /* Botones invisibles de la cruceta (Touch Targets grandes) */
   .dpad button {
-    position: absolute; opacity: 0; width: 40px; height: 40px; cursor: pointer; z-index: 10;
+    position: absolute; opacity: 0; width: 45px; height: 45px; cursor: pointer; z-index: 10;
   }
-  #up { left: 25px; top: -5px; }
-  #down { left: 25px; bottom: -5px; }
-  #left { left: -5px; top: 25px; }
-  #right { right: -5px; top: 25px; }
+  #up { left: 22px; top: -10px; height: 50px; }
+  #down { left: 22px; bottom: -10px; height: 50px; }
+  #left { left: -10px; top: 22px; width: 50px; }
+  #right { right: -10px; top: 22px; width: 50px; }
 
-  /* BOTONES A/B */
   .btns-ab {
     width: 120px; height: 70px;
     position: relative;
@@ -217,35 +209,16 @@
     cursor: pointer;
   }
   .btn-round:active { transform: scale(0.95); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5); }
-  
   .label-ab {
-    position: absolute;
-    color: var(--gb-blue);
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    pointer-events: none;
+    position: absolute; color: var(--gb-blue); font-family: sans-serif; font-weight: bold; font-size: 14px; pointer-events: none;
   }
-
   #btnA { right: 0; bottom: 10px; }
   .l-a { right: 8px; bottom: -12px; }
-  
   #btnB { left: 15px; bottom: 10px; }
   .l-b { left: 23px; bottom: -12px; }
 
-  /* SELECT START */
-  .menu-btns {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 50px;
-  }
-  .pill-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: rotate(-25deg);
-  }
+  .menu-btns { display: flex; justify-content: center; gap: 15px; margin-top: 50px; }
+  .pill-group { display: flex; flex-direction: column; align-items: center; transform: rotate(-25deg); }
   .btn-pill {
     width: 50px; height: 12px;
     background: var(--gb-btn-select);
@@ -254,706 +227,153 @@
     box-shadow: 1px 1px 2px rgba(0,0,0,0.4), inset 1px 1px 2px rgba(255,255,255,0.2);
     cursor: pointer;
     margin-bottom: 5px;
-    /* Touch target más grande invisible */
     position: relative;
   }
-  .btn-pill::after {
-    content:""; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-  }
+  .btn-pill::after { content:""; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px; }
   .btn-pill:active { background: #555; }
   .label-ss {
-    font-family: sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    color: var(--gb-blue);
-    letter-spacing: 0.5px;
+    font-family: sans-serif; font-size: 9px; font-weight: bold; color: var(--gb-blue); letter-spacing: 0.5px;
   }
 
-  /* ALTAVOZ */
   .speaker {
-    position: absolute;
-    bottom: 30px; right: 35px;
-    transform: rotate(-25deg);
-    display: flex;
-    gap: 7px;
-    opacity: 0.4;
+    position: absolute; bottom: 30px; right: 35px; transform: rotate(-25deg); display: flex; gap: 7px; opacity: 0.4;
   }
   .slot { width: 6px; height: 40px; background: #000; border-radius: 3px; box-shadow: inset 1px 1px 1px rgba(0,0,0,0.5); }
 
-  /* --- UI INTERNA --- */
+  /* UI INTERNA */
   .title { font-size: 12px; margin-bottom: 6px; text-transform: uppercase; border-bottom: 2px solid var(--gb-screen-dark); padding-bottom:4px; }
   .line { font-size: 10px; line-height: 14px; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;}
   .tiny { font-size: 8px; line-height: 10px; margin-top:4px; opacity:0.8; text-transform: uppercase;}
   .divider { height: 2px; background: var(--gb-screen-dark); margin: 6px 0; opacity: 0.5; }
   .selectable { cursor: pointer; border: 1px solid transparent; }
   .selected { background: rgba(15, 56, 15, 0.2); border: 1px dashed var(--gb-screen-dark); }
-
-  /* Inputs estilo pixel */
   .form { display: flex; flex-direction: column; gap: 6px; height: 140px; overflow-y: auto; scrollbar-width: none; }
   .field { display: flex; flex-direction: column; }
   label { font-size: 8px; margin-bottom: 2px; text-transform: uppercase; }
   input, select, textarea {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--gb-screen-dark);
-    outline: none;
-    color: var(--gb-screen-dark);
-    width: 100%;
-    border-radius: 0;
-    padding: 4px 0;
+    font-family: 'Press Start 2P', monospace; font-size: 8px; background: transparent; border: none;
+    border-bottom: 2px solid var(--gb-screen-dark); outline: none; color: var(--gb-screen-dark);
+    width: 100%; border-radius: 0; padding: 4px 0;
   }
   textarea { border: 2px solid var(--gb-screen-dark); min-height: 50px; padding: 4px; resize: none; }
-  
   .hint-container {
-    margin-top: auto;
-    background: var(--gb-screen-bg);
-    padding-top: 4px;
-    border-top: 1px dashed var(--gb-screen-dark);
-    font-size: 8px;
-    text-align: center;
+    margin-top: auto; background: var(--gb-screen-bg); padding-top: 4px;
+    border-top: 1px dashed var(--gb-screen-dark); font-size: 8px; text-align: center;
   }
   ::-webkit-scrollbar { width: 0px; background: transparent; }
-
-  /* === RESPONSIVE MÓVIL === */
-  /* Si la pantalla es más estrecha que la consola, escalamos todo hacia abajo */
-  @media (max-width: 400px) {
-    .console {
-      transform: scale(0.85); /* Reducir al 85% */
-      transform-origin: top center;
-      margin-top: 0;
-    }
-  }
-  @media (max-height: 650px) {
-    .console {
-      transform: scale(0.75);
-      transform-origin: center center;
-    }
-  }
 </style>
 </head>
 <body>
 
 <div class="console">
-  
   <div class="lens-wrapper">
-    <div class="lens-lines">
-      <div class="line-blue"></div>
-      <div class="line-mag"></div>
-    </div>
+    <div class="lens-lines"><div class="line-blue"></div><div class="line-mag"></div></div>
     <div class="lens-text">DOT MATRIX WITH STEREO SOUND</div>
-    
-    <div class="battery-led">
-      <div class="led-bulb on"></div>
-      <div class="led-text">BATTERY</div>
-    </div>
-
-    <div class="screen-border">
-      <div class="screen" id="screen">
-        </div>
-    </div>
+    <div class="battery-led"><div class="led-bulb on"></div><div class="led-text">BATTERY</div></div>
+    <div class="screen-border"><div class="screen" id="screen"></div></div>
   </div>
 
   <div class="brand">Nintendo <span>PLANNER BOY</span></div>
 
   <div class="controls-area">
     <div class="dpad">
-      <div class="dpad-v"></div>
-      <div class="dpad-h"></div>
+      <div class="dpad-v"></div><div class="dpad-h"></div>
       <button id="up" aria-label="Arriba"></button>
       <button id="down" aria-label="Abajo"></button>
       <button id="left" aria-label="Izquierda"></button>
       <button id="right" aria-label="Derecha"></button>
     </div>
-
     <div class="btns-ab">
-      <button id="btnA" class="btn-round" aria-label="A"></button>
-      <div class="label-ab l-a">A</div>
-      
-      <button id="btnB" class="btn-round" aria-label="B"></button>
-      <div class="label-ab l-b">B</div>
+      <button id="btnA" class="btn-round" aria-label="A"></button><div class="label-ab l-a">A</div>
+      <button id="btnB" class="btn-round" aria-label="B"></button><div class="label-ab l-b">B</div>
     </div>
   </div>
 
   <div class="menu-btns">
-    <div class="pill-group">
-      <button id="selectBtn" class="btn-pill" aria-label="Select"></button>
-      <div class="label-ss">SELECT</div>
-    </div>
-    <div class="pill-group">
-      <button id="startBtn" class="btn-pill" aria-label="Start"></button>
-      <div class="label-ss">START</div>
-    </div>
+    <div class="pill-group"><button id="selectBtn" class="btn-pill" aria-label="Select"></button><div class="label-ss">SELECT</div></div>
+    <div class="pill-group"><button id="startBtn" class="btn-pill" aria-label="Start"></button><div class="label-ss">START</div></div>
   </div>
 
-  <div class="speaker">
-    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
-    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
-  </div>
-
+  <div class="speaker"><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
 </div>
 
 <script>
-/** * PLANNER BOY LOGIC
+/** * === SCRIPT DE AUTO-ESCALADO (FULL SCREEN) ===
+ * Esto asegura que la consola ocupe el máximo espacio posible
+ * en CUALQUIER pantalla sin cortarse.
  */
-const Storage = {
-  load(key, fallback){
-    try{
-      const raw = localStorage.getItem(key);
-      if(!raw) return fallback;
-      const val = JSON.parse(raw);
-      return (val ?? fallback);
-    }catch(e){ return fallback; }
-  },
-  save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
-};
-
-const Keys = { events:"plannerboy.events", notes:"plannerboy.notes", tasks:"plannerboy.tasks" };
-
-let events = Storage.load(Keys.events, []);
-let notes  = Storage.load(Keys.notes, []);
-let tasks  = Storage.load(Keys.tasks, []);
-
-function uid(){
-  if (window.crypto?.randomUUID) return crypto.randomUUID();
-  return "id-" + Math.random().toString(16).slice(2) + "-" + Date.now();
+function resizeConsole() {
+  const consoleEl = document.querySelector('.console');
+  // Márgenes mínimos de seguridad (en píxeles)
+  const margin = 10; 
+  
+  // Dimensiones disponibles en la ventana
+  const availableWidth = window.innerWidth - margin;
+  const availableHeight = window.innerHeight - margin;
+  
+  // Dimensiones base de nuestra consola (definidas en CSS)
+  const baseWidth = 360;
+  const baseHeight = 610;
+  
+  // Calculamos cuánto podemos escalar
+  const scaleW = availableWidth / baseWidth;
+  const scaleH = availableHeight / baseHeight;
+  
+  // Elegimos el menor para que quepa todo
+  const scale = Math.min(scaleW, scaleH);
+  
+  // Aplicamos el zoom
+  consoleEl.style.transform = `scale(${scale})`;
 }
 
-/** ========= Validators ========= */
-function requireNonEmpty(value, field){
-  if(!String(value ?? "").trim()) throw new Error(field + " is required");
-}
-function validateEvent(e){ requireNonEmpty(e.title, "Title"); requireNonEmpty(e.date, "Date"); }
-function validateNote(n){ requireNonEmpty(n.title, "Title"); }
-function validateTask(t){
-  requireNonEmpty(t.title, "Title");
-  if(!t.priority) t.priority = "MEDIUM";
-  if(!t.done) t.done = "NO";
-}
+// Ejecutar al inicio y cada vez que se gire la pantalla
+window.addEventListener('load', resizeConsole);
+window.addEventListener('resize', resizeConsole);
+// -----------------------------------------------------
 
-/** ========= UI State Machine ========= */
-const screen = document.getElementById("screen");
-
-// Menu
-const MainMenu = ["TASKS", "EVENTS", "NOTES", "ABOUT"];
-let state = { name:"cover" };
-
-/** ========= Render Helpers ========= */
-function line(text, cls="line"){ return `<div class="${cls}">${text}</div>`; }
-function escapeHtml(s){
-  return String(s ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#39;");
-}
-function escapeAttr(s){ return escapeHtml(s).replaceAll("\n"," "); }
-
-/** ========= Formatting ========= */
-function formatEventRow(e){
-  const when = (e.date ? e.date : "----") + (e.time ? (" " + e.time) : "");
-  return `${when}  ${e.title}`;
-}
-function formatTaskRow(t){
-  const mark = (t.done === "YES") ? "[x]" : "[ ]";
-  return `${mark} ${t.title} (${t.priority})`;
-}
-function formatNoteRow(n){ return `${n.title}`; }
-
-function listData(section){
-  if(section==="EVENTS") return { key: Keys.events, arr: events, format: formatEventRow };
-  if(section==="NOTES")  return { key: Keys.notes,  arr: notes,  format: formatNoteRow  };
-  return { key: Keys.tasks, arr: tasks, format: formatTaskRow };
-}
-function persist(section){
-  const {key, arr} = listData(section);
-  Storage.save(key, arr);
-}
-
-/** ========= Screens ========= */
-function renderCover(){
-  const d = new Date();
-  screen.innerHTML = `
-    <div style="text-align:center; padding-top:20px;">
-      ${line("PLANNER BOY","title")}
-      ${line("v2.0 Mobile Ready","tiny")}
-      <div class="divider"></div>
-      ${line(d.toDateString(),"line")}
-      <br>
-      ${line("PRESS START","line")}
-    </div>
-    <div style="position:absolute; bottom:5px; left:0; width:100%; text-align:center;">
-      ${line("Developers Team","tiny")}
-    </div>
-  `;
-}
-
-function renderMainMenu(){
-  const idx = state.index ?? 0;
-  const html = MainMenu.map((item,i)=>{
-    const sel = i===idx ? 'selected' : '';
-    const prefix = i===idx ? '>' : '&nbsp;';
-    return `<div class="line selectable ${sel}" data-i="${i}">${prefix}${item}</div>`;
-  }).join("");
-  screen.innerHTML = `
-    ${line("MAIN MENU","title")}
-    <div style="margin-top:10px">${html}</div>
-    <div class="hint-container">SELECT: Quick Task</div>
-  `;
-  wireSelectableLines();
-}
-
-function renderList(section){
-  const {arr, format} = listData(section);
-  const idx = Math.min(state.index ?? 0, Math.max(0, arr.length-1));
-  state.index = idx;
-
-  const rows = (arr.length ? arr : [{_empty:true}]).map((item,i)=>{
-    if(item._empty){
-      return `<div class="line" style="text-align:center; margin-top:20px;">-- EMPTY --</div>`;
-    }
-    const sel = (i===idx) ? "selected" : "";
-    const prefix = (i===idx) ? ">" : "&nbsp;";
-    return `<div class="line selectable ${sel}" data-i="${i}">${prefix}${escapeHtml(format(item))}</div>`;
-  }).join("");
-
-  screen.innerHTML = `
-    ${line(section,"title")}
-    <div style="height:125px; overflow-y:auto; scrollbar-width:none;">
-      ${rows}
-    </div>
-    <div class="hint-container">A:Open SEL:New B:Back</div>
-  `;
-  wireSelectableLines();
-}
-
-function renderDetail(section, item){
-  let body = "";
-  if(section==="EVENTS"){
-    body = `
-      ${line(escapeHtml(item.title),"title")}
-      ${line(`DATE: ${escapeHtml(item.date || "")}`,"line")}
-      ${line(`TIME: ${escapeHtml(item.time || "-")}`,"line")}
-      <div class="divider"></div>
-      ${line(escapeHtml(item.description || ""), "tiny")}
-    `;
-  } else if(section==="NOTES"){
-    body = `
-      ${line(escapeHtml(item.title),"title")}
-      <div class="divider"></div>
-      ${line(escapeHtml(item.content || ""), "tiny")}
-    `;
-  } else { // TASKS
-    body = `
-      ${line(escapeHtml(item.title),"title")}
-      ${line(`PRIO: ${escapeHtml(item.priority || "MEDIUM")}`,"line")}
-      ${line(`DONE: ${escapeHtml(item.done || "NO")}`,"line")}
-      <div class="divider"></div>
-      ${line(escapeHtml(item.description || ""), "tiny")}
-    `;
-  }
-  screen.innerHTML = `
-    <div style="height:140px; overflow-y:auto;">
-    ${body}
-    </div>
-    <div class="hint-container">A:Edit SEL:Del B:Back</div>
-  `;
-}
-
-function renderForm(section, mode, item){
-  const isEdit = mode === "edit";
-  const t = (section==="EVENTS") ? (isEdit ? "EDIT EVENT" : "NEW EVENT")
-          : (section==="NOTES")  ? (isEdit ? "EDIT NOTE" : "NEW NOTE")
-          :                        (isEdit ? "EDIT TASK" : "NEW TASK");
-
-  const ev = section==="EVENTS";
-  const no = section==="NOTES";
-  const ta = section==="TASKS";
-
-  const model = JSON.parse(JSON.stringify(item || {}));
-  if(ev){
-    model.title = model.title ?? "";
-    model.description = model.description ?? "";
-    model.date = model.date ?? new Date().toISOString().slice(0,10);
-    model.time = model.time ?? "";
-  }
-  if(no){
-    model.title = model.title ?? "";
-    model.content = model.content ?? "";
-  }
-  if(ta){
-    model.title = model.title ?? "";
-    model.description = model.description ?? "";
-    model.priority = model.priority ?? "MEDIUM";
-    model.done = model.done ?? "NO";
-  }
-
-  screen.innerHTML = `
-    ${line(t,"title")}
-    <div class="form" id="form">
-      <div class="field">
-        <label>TITLE</label>
-        <input id="fTitle" value="${escapeAttr(model.title)}" autocomplete="off"/>
-      </div>
-
-      ${ev ? `
-        <div style="display:flex; gap:5px;">
-          <div class="field" style="flex:1">
-            <label>DATE</label>
-            <input id="fDate" type="date" value="${escapeAttr(model.date)}" />
-          </div>
-          <div class="field" style="flex:1">
-            <label>TIME</label>
-            <input id="fTime" type="time" value="${escapeAttr(model.time)}" />
-          </div>
-        </div>
-        <div class="field">
-          <label>DESC</label>
-          <textarea id="fDesc">${escapeHtml(model.description)}</textarea>
-        </div>
-      ` : ""}
-
-      ${no ? `
-        <div class="field">
-          <label>CONTENT</label>
-          <textarea id="fContent" style="min-height:80px">${escapeHtml(model.content)}</textarea>
-        </div>
-      ` : ""}
-
-      ${ta ? `
-        <div style="display:flex; gap:5px;">
-          <div class="field" style="flex:1">
-            <label>PRIO</label>
-            <select id="fPriority">
-              ${["LOW","MEDIUM","HIGH"].map(p => `<option value="${p}" ${model.priority===p?"selected":""}>${p}</option>`).join("")}
-            </select>
-          </div>
-          <div class="field" style="flex:1">
-            <label>DONE</label>
-            <select id="fDone">
-              ${["NO","YES"].map(d => `<option value="${d}" ${model.done===d?"selected":""}>${d}</option>`).join("")}
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label>DESC</label>
-          <textarea id="fDesc">${escapeHtml(model.description)}</textarea>
-        </div>
-      ` : ""}
-    </div>
-    <div class="hint-container">A:Save B:Cancel</div>
-  `;
-
-  setTimeout(()=>{ document.getElementById("fTitle")?.focus(); }, 100);
-}
-
-// === NUEVO ABOUT CON LOS NOMBRES DEL EQUIPO ===
-function renderAbout(){
-  screen.innerHTML = `
-    ${line("ABOUT","title")}
-    <br>
-    ${line("PLANNER BOY","line")}
-    <div class="divider"></div>
-    ${line("DEVELOPERS TEAM:","tiny")}
-    <br>
-    ${line("Pau","line")}
-    ${line("Jordi","line")}
-    ${line("Andres","line")}
-    <div class="divider"></div>
-    <div class="hint-container">B: Back</div>
-  `;
-}
-
-function renderConfirmDelete(section, item){
-  const summary = section==="TASKS" ? formatTaskRow(item) : section==="EVENTS" ? formatEventRow(item) : formatNoteRow(item);
-  screen.innerHTML = `
-    ${line("DELETE ITEM?","title")}
-    <br>
-    ${line(escapeHtml(summary),"tiny")}
-    <br>
-    ${line("CONFIRM?","line")}
-    <div class="hint-container">A:Yes B:No</div>
-  `;
-}
-
-function renderError(msg){
-  screen.innerHTML = `
-    ${line("ERROR","title")}
-    <br>
-    ${line(escapeHtml(msg),"line")}
-    <div class="hint-container">B: Back</div>
-  `;
-}
-
-function render(){
-  switch(state.name){
-    case "cover": return renderCover();
-    case "mainMenu": return renderMainMenu();
-    case "list": return renderList(state.section);
-    case "detail": return renderDetail(state.section, state.item);
-    case "form": return renderForm(state.section, state.mode, state.item);
-    case "about": return renderAbout();
-    case "confirmDelete": return renderConfirmDelete(state.section, state.item);
-    case "error": return renderError(state.message || "Unknown error");
-    default: return renderCover();
-  }
-}
-
-/** ========= Navigation & CRUD ========= */
-function goCover(){ state = {name:"cover"}; render(); }
-function goMainMenu(){ state = {name:"mainMenu", index:0}; render(); }
-
-function deleteItem(section, index){
-  const {arr} = listData(section);
-  if(index < 0 || index >= arr.length) return;
-  arr.splice(index,1);
-  persist(section);
-  state = {name:"list", section, index:Math.max(0, index-1)};
-  render();
-}
-function toggleTaskDone(index){
-  const item = tasks[index];
-  if(!item) return;
-  item.done = (item.done === "YES") ? "NO" : "YES";
-  Storage.save(Keys.tasks, tasks);
-}
-
-/** ========= Form collect/save ========= */
-function collectForm(){
-  const section = state.section;
-  if(section==="EVENTS"){
-    return {
-      title: document.getElementById("fTitle")?.value ?? "",
-      date: document.getElementById("fDate")?.value ?? "",
-      time: document.getElementById("fTime")?.value ?? "",
-      description: document.getElementById("fDesc")?.value ?? ""
-    };
-  }
-  if(section==="NOTES"){
-    return {
-      title: document.getElementById("fTitle")?.value ?? "",
-      content: document.getElementById("fContent")?.value ?? ""
-    };
-  }
-  return {
-    title: document.getElementById("fTitle")?.value ?? "",
-    priority: document.getElementById("fPriority")?.value ?? "MEDIUM",
-    done: document.getElementById("fDone")?.value ?? "NO",
-    description: document.getElementById("fDesc")?.value ?? ""
-  };
-}
-
-function saveForm(){
-  const section = state.section;
-  const payload = collectForm();
-
-  try{
-    if(section==="EVENTS") validateEvent(payload);
-    if(section==="NOTES") validateNote(payload);
-    if(section==="TASKS") validateTask(payload);
-  }catch(err){
-    state = {name:"error", message: String(err.message || err)};
-    render();
-    return;
-  }
-
-  if(section==="EVENTS"){
-    if(state.mode==="new"){
-      events.unshift({ id: uid(), ...payload });
-    }else{
-      events[state.index] = { ...events[state.index], ...payload };
-    }
-    Storage.save(Keys.events, events);
-  }else if(section==="NOTES"){
-    if(state.mode==="new"){
-      notes.unshift({ id: uid(), ...payload });
-    }else{
-      notes[state.index] = { ...notes[state.index], ...payload };
-    }
-    Storage.save(Keys.notes, notes);
-  }else{
-    if(state.mode==="new"){
-      tasks.unshift({ id: uid(), ...payload });
-    }else{
-      tasks[state.index] = { ...tasks[state.index], ...payload };
-    }
-    Storage.save(Keys.tasks, tasks);
-  }
-
-  state = {name:"list", section, index:0};
-  render();
-}
-
-/** ========= Click selection ========= */
-function wireSelectableLines(){
-  screen.querySelectorAll(".selectable").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      const i = Number(el.dataset.i);
-      if(Number.isNaN(i)) return;
-      if(state.name === "mainMenu"){ state.index = i; render(); }
-      else if(state.name === "list"){ state.index = i; render(); }
-    });
-    el.addEventListener("dblclick", ()=>{
-      if(state.name === "mainMenu" || state.name === "list") onA();
-    });
-  });
-}
-
-/** ========= Controls ========= */
-function onUp(){
-  if(state.name==="mainMenu"){
-    state.index = (state.index - 1 + MainMenu.length) % MainMenu.length;
-    render();
-  }else if(state.name==="list"){
-    const {arr} = listData(state.section);
-    if(arr.length===0) return;
-    state.index = (state.index - 1 + arr.length) % arr.length;
-    render();
-  }
-}
-function onDown(){
-  if(state.name==="mainMenu"){
-    state.index = (state.index + 1) % MainMenu.length;
-    render();
-  }else if(state.name==="list"){
-    const {arr} = listData(state.section);
-    if(arr.length===0) return;
-    state.index = (state.index + 1) % arr.length;
-    render();
-  }
-}
-function onLeft(){
-  if(state.name==="detail" && state.section==="TASKS"){
-    toggleTaskDone(state.index);
-    state.item = tasks[state.index];
-    render();
-  }
-}
-function onRight(){ onLeft(); }
-
-function onA(){
-  if(state.name==="cover"){ goMainMenu(); return; }
-
-  if(state.name==="mainMenu"){
-    const choice = MainMenu[state.index];
-    if(choice==="ABOUT"){ state = {name:"about"}; render(); return; }
-    state = {name:"list", section:choice, index:0};
-    render();
-    return;
-  }
-
-  if(state.name==="list"){
-    const {arr} = listData(state.section);
-    if(arr.length===0) return;
-    state = {name:"detail", section:state.section, index:state.index, item: arr[state.index]};
-    render();
-    return;
-  }
-
-  if(state.name==="detail"){
-    state = {name:"form", section:state.section, mode:"edit", item: state.item, index: state.index};
-    render();
-    return;
-  }
-
-  if(state.name==="form"){ saveForm(); return; }
-
-  if(state.name==="about"){ goMainMenu(); return; }
-
-  if(state.name==="confirmDelete"){
-    deleteItem(state.section, state.index);
-    return;
-  }
-
-  if(state.name==="error"){ goMainMenu(); return; }
-}
-
-function onB(){
-  if(state.name==="cover") return;
-
-  if(state.name==="mainMenu"){ goCover(); return; }
-
-  if(state.name==="list"){ goMainMenu(); return; }
-
-  if(state.name==="detail"){ state = {name:"list", section:state.section, index:state.index}; render(); return; }
-
-  if(state.name==="form"){ state = {name:"list", section:state.section, index:0}; render(); return; }
-
-  if(state.name==="about"){ goMainMenu(); return; }
-
-  if(state.name==="confirmDelete"){
-    state = {name:"detail", section:state.section, index:state.index, item: state.item};
-    render();
-    return;
-  }
-
-  if(state.name==="error"){ goMainMenu(); return; }
-}
-
-function onStart(){ goMainMenu(); }
-
-function onSelect(){
-  if(state.name==="mainMenu"){
-    // Quick add task
-    state = {name:"form", section:"TASKS", mode:"new", item:null, index:0};
-    render();
-    return;
-  }
-  if(state.name==="list"){
-    state = {name:"form", section:state.section, mode:"new", item:null, index:0};
-    render();
-    return;
-  }
-  if(state.name==="detail"){
-    state = {name:"confirmDelete", section:state.section, index:state.index, item: state.item};
-    render();
-    return;
-  }
-}
-
-/** ========= Keyboard support ========= */
-function isTyping(){
-  const el = document.activeElement;
-  if(!el) return false;
-  const tag = (el.tagName || "").toUpperCase();
-  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable === true;
-}
-
-document.addEventListener("keydown", (e)=>{
-  if(isTyping()){
-    if(e.key === "Escape"){
-      e.preventDefault();
-      onB();
-    }
-    return;
-  }
-
-  const k = e.key.toLowerCase();
-  if(k==="arrowup") { e.preventDefault(); onUp(); }
-  if(k==="arrowdown") { e.preventDefault(); onDown(); }
-  if(k==="arrowleft") { e.preventDefault(); onLeft(); }
-  if(k==="arrowright") { e.preventDefault(); onRight(); }
-  if(k==="enter") { e.preventDefault(); onA(); }
-  if(k==="escape" || k==="backspace") { e.preventDefault(); onB(); }
-  if(k===" "){ e.preventDefault(); onSelect(); }
-  if(k==="s"){ e.preventDefault(); onStart(); }
-});
-
-/** ========= Wire buttons ========= */
-document.getElementById("up").onclick = onUp;
-document.getElementById("down").onclick = onDown;
-document.getElementById("left").onclick = onLeft;
-document.getElementById("right").onclick = onRight;
-document.getElementById("btnA").onclick = onA;
-document.getElementById("btnB").onclick = onB;
-document.getElementById("startBtn").onclick = onStart;
-document.getElementById("selectBtn").onclick = onSelect;
-
-/** ========= Boot ========= */
-state = {name:"cover"};
-render();
+/** * PLANNER BOY LOGIC */
+const Storage={load(a,b){try{const c=localStorage.getItem(a);if(!c)return b;const d=JSON.parse(c);return d??b}catch(e){return b}},save(a,b){localStorage.setItem(a,JSON.stringify(b))}},Keys={events:"plannerboy.events",notes:"plannerboy.notes",tasks:"plannerboy.tasks"};let events=Storage.load(Keys.events,[]),notes=Storage.load(Keys.notes,[]),tasks=Storage.load(Keys.tasks,[]);function uid(){return window.crypto?.randomUUID?crypto.randomUUID():"id-"+Math.random().toString(16).slice(2)+"-"+Date.now()}
+function requireNonEmpty(a,b){if(!String(a??"").trim())throw new Error(b+" is required")}
+function validateEvent(a){requireNonEmpty(a.title,"Title"),requireNonEmpty(a.date,"Date")}
+function validateNote(a){requireNonEmpty(a.title,"Title")}
+function validateTask(a){requireNonEmpty(a.title,"Title"),a.priority||(a.priority="MEDIUM"),a.done||(a.done="NO")}
+const screen=document.getElementById("screen"),MainMenu=["TASKS","EVENTS","NOTES","ABOUT"];let state={name:"cover"};
+function line(a,b="line"){return`<div class="${b}">${a}</div>`}
+function escapeHtml(a){return String(a??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;")}
+function escapeAttr(a){return escapeHtml(a).replaceAll("\n"," ")}
+function formatEventRow(a){return(a.date?a.date:"----")+(a.time?" "+a.time:"")+"  "+a.title}
+function formatTaskRow(a){return("YES"===a.done?"[x]":"[ ]")+" "+a.title+" ("+a.priority+")"}
+function formatNoteRow(a){return""+a.title}
+function listData(a){return"EVENTS"===a?{key:Keys.events,arr:events,format:formatEventRow}:"NOTES"===a?{key:Keys.notes,arr:notes,format:formatNoteRow}:{key:Keys.tasks,arr:tasks,format:formatTaskRow}}
+function persist(a){const{key:b,arr:c}=listData(a);Storage.save(b,c)}
+function renderCover(){const a=new Date;screen.innerHTML=`<div style="text-align:center; padding-top:20px;">${line("PLANNER BOY","title")}${line("v2.1 Full Screen","tiny")}<div class="divider"></div>${line(a.toDateString(),"line")}<br>${line("PRESS START","line")}</div><div style="position:absolute; bottom:5px; left:0; width:100%; text-align:center;">${line("Developers Team","tiny")}</div>`}
+function renderMainMenu(){const a=state.index??0,b=MainMenu.map((b,c)=>{const d=c===a?"selected":"",e=c===a?">":"&nbsp;";return`<div class="line selectable ${d}" data-i="${c}">${e}${b}</div>`}).join("");screen.innerHTML=`${line("MAIN MENU","title")}<div style="margin-top:10px">${b}</div><div class="hint-container">SELECT: Quick Task</div>`,wireSelectableLines()}
+function renderList(a){const{arr:b,format:c}=listData(a),d=Math.min(state.index??0,Math.max(0,b.length-1));state.index=d;const e=(b.length?b:[{_empty:!0}]).map((a,b)=>{if(a._empty)return`<div class="line" style="text-align:center; margin-top:20px;">-- EMPTY --</div>`;const e=b===d?"selected":"",f=b===d?">":"&nbsp;";return`<div class="line selectable ${e}" data-i="${b}">${f}${escapeHtml(c(a))}</div>`}).join("");screen.innerHTML=`${line(a,"title")}<div style="height:125px; overflow-y:auto; scrollbar-width:none;">${e}</div><div class="hint-container">A:Open SEL:New B:Back</div>`,wireSelectableLines()}
+function renderDetail(a,b){let c="";c="EVENTS"===a?`${line(escapeHtml(b.title),"title")}${line("DATE: "+escapeHtml(b.date||""),"line")}${line("TIME: "+escapeHtml(b.time||"-"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`:"NOTES"===a?`${line(escapeHtml(b.title),"title")}<div class="divider"></div>${line(escapeHtml(b.content||""),"tiny")}`:`${line(escapeHtml(b.title),"title")}${line("PRIO: "+escapeHtml(b.priority||"MEDIUM"),"line")}${line("DONE: "+escapeHtml(b.done||"NO"),"line")}<div class="divider"></div>${line(escapeHtml(b.description||""),"tiny")}`,screen.innerHTML=`<div style="height:140px; overflow-y:auto;">${c}</div><div class="hint-container">A:Edit SEL:Del B:Back</div>`}
+function renderForm(a,b,c){const d="edit"===b,e="EVENTS"===a?d?"EDIT EVENT":"NEW EVENT":"NOTES"===a?d?"EDIT NOTE":"NEW NOTE":d?"EDIT TASK":"NEW TASK",f="EVENTS"===a,g="NOTES"===a,h="TASKS"===a,i=JSON.parse(JSON.stringify(c||{}));f&&(i.title=i.title??"",i.description=i.description??"",i.date=i.date??(new Date).toISOString().slice(0,10),i.time=i.time??""),g&&(i.title=i.title??"",i.content=i.content??""),h&&(i.title=i.title??"",i.description=i.description??"",i.priority=i.priority??"MEDIUM",i.done=i.done??"NO"),screen.innerHTML=`${line(e,"title")}<div class="form" id="form"><div class="field"><label>TITLE</label><input id="fTitle" value="${escapeAttr(i.title)}" autocomplete="off"/></div>${f?`<div style="display:flex; gap:5px;"><div class="field" style="flex:1"><label>DATE</label><input id="fDate" type="date" value="${escapeAttr(i.date)}" /></div><div class="field" style="flex:1"><label>TIME</label><input id="fTime" type="time" value="${escapeAttr(i.time)}" /></div></div><div class="field"><label>DESC</label><textarea id="fDesc">${escapeHtml(i.description)}</textarea></div>`:""}${g?`<div class="field"><label>CONTENT</label><textarea id="fContent" style="min-height:80px">${escapeHtml(i.content)}</textarea></div>`:""}${h?`<div style="display:flex; gap:5px;"><div class="field" style="flex:1"><label>PRIO</label><select id="fPriority">${["LOW","MEDIUM","HIGH"].map(a=>`<option value="${a}" ${i.priority===a?"selected":""}>${a}</option>`).join("")}</select></div><div class="field" style="flex:1"><label>DONE</label><select id="fDone">${["NO","YES"].map(a=>`<option value="${a}" ${i.done===a?"selected":""}>${a}</option>`).join("")}</select></div></div><div class="field"><label>DESC</label><textarea id="fDesc">${escapeHtml(i.description)}</textarea></div>`:""}</div><div class="hint-container">A:Save B:Cancel</div>`,setTimeout(()=>{document.getElementById("fTitle")?.focus()},100)}
+function renderAbout(){screen.innerHTML=`${line("ABOUT","title")}<br>${line("PLANNER BOY","line")}<div class="divider"></div>${line("DEVELOPERS TEAM:","tiny")}<br>${line("Pau","line")}${line("Jordi","line")}${line("Andres","line")}<div class="divider"></div><div class="hint-container">B: Back</div>`}
+function renderConfirmDelete(a,b){const c="TASKS"===a?formatTaskRow(b):"EVENTS"===a?formatEventRow(b):formatNoteRow(b);screen.innerHTML=`${line("DELETE ITEM?","title")}<br>${line(escapeHtml(c),"tiny")}<br>${line("CONFIRM?","line")}<div class="hint-container">A:Yes B:No</div>`}
+function renderError(a){screen.innerHTML=`${line("ERROR","title")}<br>${line(escapeHtml(a),"line")}<div class="hint-container">B: Back</div>`}
+function render(){switch(state.name){case"cover":return renderCover();case"mainMenu":return renderMainMenu();case"list":return renderList(state.section);case"detail":return renderDetail(state.section,state.item);case"form":return renderForm(state.section,state.mode,state.item);case"about":return renderAbout();case"confirmDelete":return renderConfirmDelete(state.section,state.item);case"error":return renderError(state.message||"Unknown error");default:return renderCover()}}
+function goCover(){state={name:"cover"},render()}
+function goMainMenu(){state={name:"mainMenu",index:0},render()}
+function deleteItem(a,b){const{arr:c}=listData(a);0>b||b>=c.length||(c.splice(b,1),persist(a),state={name:"list",section:a,index:Math.max(0,b-1)},render())}
+function toggleTaskDone(a){const b=tasks[a];b&&(b.done="YES"===b.done?"NO":"YES",Storage.save(Keys.tasks,tasks))}
+function collectForm(){const a=state.section;return"EVENTS"===a?{title:document.getElementById("fTitle")?.value??"",date:document.getElementById("fDate")?.value??"",time:document.getElementById("fTime")?.value??"",description:document.getElementById("fDesc")?.value??""}:"NOTES"===a?{title:document.getElementById("fTitle")?.value??"",content:document.getElementById("fContent")?.value??""}:{title:document.getElementById("fTitle")?.value??"",priority:document.getElementById("fPriority")?.value??"MEDIUM",done:document.getElementById("fDone")?.value??"NO",description:document.getElementById("fDesc")?.value??""}}
+function saveForm(){const a=state.section,b=collectForm();try{"EVENTS"===a&&validateEvent(b),"NOTES"===a&&validateNote(b),"TASKS"===a&&validateTask(b)}catch(c){state={name:"error",message:String(c.message||c)},render();return}"EVENTS"===a?("new"===state.mode?events.unshift({id:uid(),...b}):events[state.index]={...events[state.index],...b},Storage.save(Keys.events,events)):"NOTES"===a?("new"===state.mode?notes.unshift({id:uid(),...b}):notes[state.index]={...notes[state.index],...b},Storage.save(Keys.notes,notes)):("new"===state.mode?tasks.unshift({id:uid(),...b}):tasks[state.index]={...tasks[state.index],...b},Storage.save(Keys.tasks,tasks)),state={name:"list",section:a,index:0},render()}
+function wireSelectableLines(){screen.querySelectorAll(".selectable").forEach(a=>{a.addEventListener("click",()=>{const b=Number(a.dataset.i);Number.isNaN(b)||("mainMenu"===state.name?(state.index=b,render()):"list"===state.name&&(state.index=b,render()))}),a.addEventListener("dblclick",()=>{("mainMenu"===state.name||"list"===state.name)&&onA()})})}
+function onUp(){if("mainMenu"===state.name)state.index=(state.index-1+MainMenu.length)%MainMenu.length,render();else if("list"===state.name){const{arr:a}=listData(state.section);0!==a.length&&(state.index=(state.index-1+a.length)%a.length,render())}}
+function onDown(){if("mainMenu"===state.name)state.index=(state.index+1)%MainMenu.length,render();else if("list"===state.name){const{arr:a}=listData(state.section);0!==a.length&&(state.index=(state.index+1)%a.length,render())}}
+function onLeft(){"detail"===state.name&&"TASKS"===state.section&&(toggleTaskDone(state.index),state.item=tasks[state.index],render())}
+function onRight(){onLeft()}
+function onA(){if("cover"===state.name){goMainMenu();return}if("mainMenu"===state.name){const a=MainMenu[state.index];if("ABOUT"===a){state={name:"about"},render();return}state={name:"list",section:a,index:0},render();return}if("list"===state.name){const{arr:a}=listData(state.section);if(0===a.length)return;state={name:"detail",section:state.section,index:state.index,item:a[state.index]},render();return}if("detail"===state.name){state={name:"form",section:state.section,mode:"edit",item:state.item,index:state.index},render();return}if("form"===state.name){saveForm();return}"about"===state.name?goMainMenu():"confirmDelete"===state.name?deleteItem(state.section,state.index):"error"===state.name&&goMainMenu()}
+function onB(){if("cover"!==state.name){if("mainMenu"===state.name){goCover();return}"list"===state.name?goMainMenu():"detail"===state.name?(state={name:"list",section:state.section,index:state.index},render()):"form"===state.name?(state={name:"list",section:state.section,index:0},render()):"about"===state.name?goMainMenu():"confirmDelete"===state.name?(state={name:"detail",section:state.section,index:state.index,item:state.item},render()):"error"===state.name&&goMainMenu()}}
+function onStart(){goMainMenu()}
+function onSelect(){if("mainMenu"===state.name){state={name:"form",section:"TASKS",mode:"new",item:null,index:0},render();return}"list"===state.name?(state={name:"form",section:state.section,mode:"new",item:null,index:0},render()):"detail"===state.name&&(state={name:"confirmDelete",section:state.section,index:state.index,item:state.item},render())}
+function isTyping(){const a=document.activeElement;if(!a)return!1;const b=(a.tagName||"").toUpperCase();return"INPUT"===b||"TEXTAREA"===b||"SELECT"===b||!0===a.isContentEditable}
+document.addEventListener("keydown",a=>{if(isTyping()){"Escape"===a.key&&(a.preventDefault(),onB());return}const b=a.key.toLowerCase();"arrowup"===b?(a.preventDefault(),onUp()):"arrowdown"===b?(a.preventDefault(),onDown()):"arrowleft"===b?(a.preventDefault(),onLeft()):"arrowright"===b?(a.preventDefault(),onRight()):"enter"===b?(a.preventDefault(),onA()):"escape"===b||"backspace"===b?(a.preventDefault(),onB()):" "===b?(a.preventDefault(),onSelect()):"s"===b&&(a.preventDefault(),onStart())});
+document.getElementById("up").onclick=onUp,document.getElementById("down").onclick=onDown,document.getElementById("left").onclick=onLeft,document.getElementById("right").onclick=onRight,document.getElementById("btnA").onclick=onA,document.getElementById("btnB").onclick=onB,document.getElementById("startBtn").onclick=onStart,document.getElementById("selectBtn").onclick=onSelect;
+state={name:"cover"},render();
 </script>
 </body>
 </html>
