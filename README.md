@@ -1,16 +1,29 @@
-# 🎮 Planner Boy (DMG-01 Edition)
+# 🎮 Planner Boy (DMG-01 Edition)  **"Productivity... in 8-bit."**
 
-> **"Productivity... in 8-bit."**
+<div align="center">
+  <h1>
+    <a href="https://TU-USUARIO.github.io/TU-REPOSITORIO/" style="text-decoration: none;">
+      <kbd>👾 CLICK AQUÍ PARA PROBAR LA APP 👾</kbd>
+    </a>
+  </h1>
+</div>
+
 
 ![Planner Boy Banner](https://img.shields.io/badge/Console-GameBoy_DMG-purple?style=for-the-badge)
 
-![Tech](https://img.shields.io/badge/Built_With-HTML_CSS_JS-yellow?style=for-the-badge)
+<div align="center">
+  <img src="demo.gif" width="300" alt="Demo Planner Boy" style="border-radius: 15px; box-shadow: 0px 0px 20px rgba(0,0,0,0.5);">
+</div>
+
+
 
 ## 👾 ¿Qué es esto?
 
 **Planner Boy** no es solo una agenda: es un viaje en el tiempo. Es una aplicación de gestión de tareas, eventos y notas que vive dentro de una **réplica exacta a escala de la pantalla de una Game Boy original (DMG-01)**.
 
 Olvídate de las apps de productividad aburridas y corporativas. Aquí organizas tu vida con la estética, los sonidos (imaginarios) y la nostalgia de los 90.
+
+
 
 ---
 
@@ -20,7 +33,9 @@ Este proyecto tiene su corazón en el código puro. Nació como un **proyecto de
 
 * **Jordi**, **Andres**  y **Pau**
 
-Originalmente, era una lógica robusta de gestión de datos. Pero decidí darle una vuelta de tuerca: **"¿Y si en vez de una terminal aburrida, esto corriera en la consola de mi infancia?"**.
+Originalmente, era una lógica robusta de gestión de datos. Pero decidí darle una vuelta de tuerca: 
+
+**"¿Y si en vez de una terminal aburrida, esto corriera en la consola de mi infancia?"**.
 
 Así nació este **Frontend Nostálgico**: una capa de HTML, CSS y JavaScript Vanilla que transforma esa lógica en una experiencia retro portátil.
 
@@ -77,9 +92,9 @@ Esta web es una **PWA (Progressive Web App)** camuflada. Para sentir que tienes 
 
 ## 💾 Guardado de Datos
 
-**"¿Dónde se guardan mis cosas?"**
+**"¿Dónde se guardan mis datos?"**
 Todo se guarda en el **LocalStorage** de tu navegador. Si cierras la pestaña o apagas el móvil, tus tareas seguirán ahí cuando vuelvas (siempre que no borres el caché del navegador). ¡Como un cartucho con pila de guardado! 🔋
 
 ---
 
-Hecho con ❤️ y nostalgia por el **Team Planner Boy**.
+**JORDI CASAS**
